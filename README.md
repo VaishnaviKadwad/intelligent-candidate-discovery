@@ -6,7 +6,8 @@ colorTo: indigo
 sdk: docker
 app_port: 7860
 pinned: false
----# Intelligent Candidate Discovery
+---
+# Intelligent Candidate Discovery
 
 An AI-powered recruiter that semantically ranks candidates against a job description using multi-factor scoring.
 
