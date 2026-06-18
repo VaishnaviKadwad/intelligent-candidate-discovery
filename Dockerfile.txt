@@ -1,0 +1,27 @@
+# --- Step 1: Build the Frontend ---
+FROM node:18 AS frontend-build
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/ ./
+RUN npm run build
+
+# --- Step 2: Set up the Backend & Run ---
+FROM python:3.9
+WORKDIR /app
+
+# Install Python dependencies
+COPY backend/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy backend application files
+COPY backend/ ./backend
+
+# Copy the built frontend files over to the backend to serve them together
+COPY --from=frontend-build /app/frontend/dist ./frontend/dist
+
+# Hugging Face Spaces strictly requires port 7860
+EXPOSE 7860
+
+# Start the application using Uvicorn
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "7860"]
