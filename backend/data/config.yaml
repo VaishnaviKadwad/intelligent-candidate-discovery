@@ -1,0 +1,23 @@
+scoring:
+  weights:
+    skill_match: 0.35
+    experience_relevance: 0.25
+    career_trajectory: 0.20
+    behavioral_signals: 0.20
+  experience:
+    max_expected_years: 15
+    seniority_levels:
+      junior: [0, 2]
+      mid: [3, 5]
+      senior: [6, 9]
+      lead: [10, 15]
+  career_trajectory:
+    promotion_bonus: 0.15
+    role_progression_weight: 0.10
+  behavioral:
+    github_weight: 0.5
+    certification_weight: 0.3
+    recent_role_change_weight: 0.2
+semantic:
+  model_name: all-MiniLM-L6-v2
+  similarity_threshold: 0.3
