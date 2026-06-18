@@ -93,10 +93,26 @@ def parse_job_description(text: str) -> JDExtracted:
         "computer vision", "deep learning", "machine learning", "data science", "analytics"
     ]
 
-    if not required_skills:
-        for tech in tech_indicators:
-            if tech in text_lower:
-                required_skills.append(tech.title())
+    # Always supplement with individually recognised tech keywords found anywhere in the text.
+    # This ensures that "Strong Python and PyTorch skills" produces ["Python", "PyTorch"].
+    for tech in tech_indicators:
+        if tech in text_lower:
+            required_skills.append(tech.title())
+
+    # Clean up: remove lines that are full sentences rather than skill names.
+    cleaned = []
+    for s in required_skills:
+        s_clean = s.strip().strip("-*•,.")
+        # Skip if the line is a long phrase (>4 words) that doesn't start with a tech keyword.
+        words = s_clean.split()
+        if len(words) > 4 and not any(
+            w.lower() in tech_indicators or s_clean.lower().startswith(w.lower())
+            for w in words
+        ):
+            continue
+        if len(s_clean) > 1:
+            cleaned.append(s_clean)
+    required_skills = cleaned
 
     # --- Soft Skills ---
     soft_indicators = [
