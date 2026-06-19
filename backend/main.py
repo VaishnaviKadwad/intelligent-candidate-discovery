@@ -1,10 +1,10 @@
 """
-Intelligent Candidate Discovery â€” FastAPI Application
+Intelligent Candidate Discovery — FastAPI Application
 
 Provides three endpoints:
-  GET  /health      â€“ service health + model status
-  GET  /candidates  â€“ list all candidates
-  POST /rank        â€“ rank candidates against a job description
+  GET  /health      – service health + model status
+  GET  /candidates  – list all candidates
+  POST /rank        – rank candidates against a job description
 
 On startup the application:
   1. Loads the sentence-transformers model (with graceful fallback).
@@ -16,6 +16,8 @@ import json
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from models import (
     JobDescriptionInput,
@@ -41,7 +43,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global instances â€” created once, reused across requests.
+# Global instances — created once, reused across requests.
 semantic_matcher = SemanticMatcher()
 config = load_config()
 scoring_engine = ScoringEngine(config, semantic_matcher)
@@ -130,7 +132,19 @@ async def rank_candidates(job_input: JobDescriptionInput, top_n: int = 10):
         candidates=ranked,
     )
 
+# ------------------------------------------------------------------
+# Mount Frontend Production Build
+# ------------------------------------------------------------------
+# Check if frontend production distribution files exist before mounting
+if os.path.exists("frontend/dist"):
+    # Serve single files like index.html at root
+    @app.get("/")
+    async def read_index():
+        return FileResponse("frontend/dist/index.html")
+
+    # Mount static asset routing (js, css, images)
+    app.mount("/", StaticFiles(directory="frontend/dist"), name="static")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=7860)
