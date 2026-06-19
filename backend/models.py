@@ -5,6 +5,7 @@ from typing import Optional
 class JobDescriptionInput(BaseModel):
     """Request body for the /rank endpoint."""
     text: str
+    candidates: Optional[list[dict]] = None
 
 
 class JDExtracted(BaseModel):

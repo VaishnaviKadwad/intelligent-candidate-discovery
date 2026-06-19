@@ -13,6 +13,7 @@ from models import (
     RankResponse,
     HealthResponse,
 )
+from pydantic import ValidationError
 from jd_parser import parse_job_description
 from semantic_matcher import SemanticMatcher
 from scoring_engine import ScoringEngine, load_config
@@ -63,9 +64,16 @@ async def rank_candidates(job_input: JobDescriptionInput, top_n: int = 10):
         raise HTTPException(status_code=400, detail="Job description text is required")
 
     jd = parse_job_description(job_input.text)
-    candidates = get_all_candidates()
-    if not candidates:
-        raise HTTPException(status_code=500, detail="No candidates in database")
+
+    if job_input.candidates is not None:
+        try:
+            candidates = [Candidate(**c) for c in job_input.candidates]
+        except ValidationError:
+            raise HTTPException(status_code=400, detail="Invalid candidate data in request")
+    else:
+        candidates = get_all_candidates()
+        if not candidates:
+            raise HTTPException(status_code=500, detail="No candidates in database")
 
     scored = []
     for candidate in candidates:
@@ -110,9 +118,6 @@ else:
     async def root():
         return {"message": "Intelligent Candidate Discovery API is running!", "docs": "/docs"}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=7860)
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)

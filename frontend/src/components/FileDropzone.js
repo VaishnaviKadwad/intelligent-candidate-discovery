@@ -27,17 +27,17 @@ export default function FileDropzone({ onFileParsed, accept }) {
         const data = JSON.parse(text);
         const arr = Array.isArray(data) ? data : data.candidates || [];
         if (arr.length === 0) throw new Error('No candidates found');
-        onFileParsed({ type: 'candidates', data: arr });
+        onFileParsed({ type: 'candidates', data: arr, filename: file.name });
       } else if (ext === 'csv') {
         const Papa = require('papaparse');
         const result = Papa.parse(text, { header: true, skipEmptyLines: true });
-        onFileParsed({ type: 'candidates', data: result.data });
+        onFileParsed({ type: 'candidates', data: result.data, filename: file.name });
       } else if (ext === 'xlsx') {
         const XLSX = require('xlsx');
         const wb = XLSX.read(text, { type: 'string' });
         const ws = wb.Sheets[wb.SheetNames[0]];
         const data = XLSX.utils.sheet_to_json(ws);
-        onFileParsed({ type: 'candidates', data });
+        onFileParsed({ type: 'candidates', data, filename: file.name });
       } else if (ext === 'pdf') {
         onFileParsed({ type: 'jd', data: text, filename: file.name });
       } else {

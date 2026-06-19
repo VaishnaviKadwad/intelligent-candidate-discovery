@@ -11,6 +11,9 @@ export default function TopRankingsTab({
   onFindCandidates,
   jdText,
   setJdText,
+  offlineCandidates,
+  clearResults,
+  showToast,
 }) {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('total');
@@ -21,7 +24,7 @@ export default function TopRankingsTab({
       const q = search.toLowerCase();
       list = list.filter(
         (c) =>
-          c.name.toLowerCase().includes(q) ||
+          (c.name || '').toLowerCase().includes(q) ||
           (c.matched_skills || []).some((s) => s.toLowerCase().includes(q))
       );
     }
@@ -37,6 +40,13 @@ export default function TopRankingsTab({
     if (jdText.trim()) onFindCandidates(jdText.trim());
   };
 
+  const handleOfflineRank = async () => {
+    if (!jdText.trim()) return;
+    const { rankCandidates } = await import('../utils/offlineScorer');
+    const results = rankCandidates(offlineCandidates || [], jdText);
+    onFindCandidates(jdText);
+  };
+
   return (
     <div className="tab-content">
       <form className="jd-input-section" onSubmit={handleSubmit}>
@@ -45,17 +55,16 @@ export default function TopRankingsTab({
           placeholder="Paste a job description here..."
           value={jdText}
           onChange={(e) => setJdText(e.target.value)}
-          disabled={isOffline}
         />
         <div className="jd-actions">
-          <button type="submit" disabled={loading || !jdText.trim() || isOffline} className="btn-primary">
+          <button type="submit" disabled={loading || !jdText.trim()} className="btn-primary">
             {loading ? <><Spinner size={14} /> Searching...</> : 'Find Candidates'}
           </button>
-          <button type="button" onClick={() => setJdText(SAMPLE_JD)} disabled={loading || isOffline} className="btn-secondary">
+          <button type="button" onClick={() => setJdText(SAMPLE_JD)} disabled={loading} className="btn-secondary">
             Load Sample JD
           </button>
         </div>
-        {isOffline && <p className="offline-note">JD ranking unavailable offline. Use Upload & Rank tab.</p>}
+        {isOffline && <p className="offline-note">Using local keyword scoring engine (offline mode).</p>}
       </form>
 
       {error && <div className="error-banner">{error}</div>}
@@ -78,6 +87,11 @@ export default function TopRankingsTab({
                 <option value="experience">Sort by Experience</option>
                 <option value="behavioral">Sort by Behavioral</option>
               </select>
+              {clearResults && (
+                <button type="button" className="btn-secondary" onClick={clearResults}>
+                  Clear Results
+                </button>
+              )}
             </div>
           </div>
           <div className={`candidate-list ${loading ? 'loading-overlay' : ''}`}>
@@ -88,7 +102,7 @@ export default function TopRankingsTab({
               </div>
             )}
             {filtered.map((c, i) => (
-              <CandidateCard key={c.candidate_id} rank={i + 1} candidate={c} />
+              <CandidateCard key={c.candidate_id || i} rank={i + 1} candidate={c} />
             ))}
           </div>
         </div>

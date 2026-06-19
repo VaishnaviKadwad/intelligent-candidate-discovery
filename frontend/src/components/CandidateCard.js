@@ -3,9 +3,24 @@ import ScoreBar from './ScoreBar';
 
 const rankEmojis = ['🥇', '🥈', '🥉'];
 
+function getName(candidate) {
+  return candidate.name || candidate.Name || candidate.full_name || candidate.candidate_name || 'Unknown';
+}
+
+function getTitle(candidate) {
+  return candidate.current_title || candidate.title || candidate.Title || candidate.Current_Title || candidate.job_title || candidate.designation || 'No title';
+}
+
+function getInitial(name) {
+  return (name || '?').charAt(0).toUpperCase();
+}
+
 export default function CandidateCard({ rank, candidate, showExpand = true }) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const name = getName(candidate);
+  const title = getTitle(candidate);
 
   const handleCopy = () => {
     const json = JSON.stringify(candidate, null, 2);
@@ -22,9 +37,10 @@ export default function CandidateCard({ rank, candidate, showExpand = true }) {
           <span className="rank-badge" style={rank <= 3 ? { background: 'var(--accent)' } : {}}>
             {rank <= 3 ? rankEmojis[rank - 1] : `#${rank}`}
           </span>
+          <div className="avatar-initial">{getInitial(name)}</div>
           <div className="name-title">
-            <div className="name">{candidate.name}</div>
-            <div className="title">{candidate.title}</div>
+            <div className="name">{name}</div>
+            <div className="title">{title}</div>
           </div>
         </div>
         <div className="card-header-right">

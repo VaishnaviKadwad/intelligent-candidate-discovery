@@ -1,0 +1,458 @@
+[
+  {
+    "id": "c001",
+    "name": "Alice Chen",
+    "email": "alice.chen@example.com",
+    "current_title": "Senior Machine Learning Engineer",
+    "experience_years": 7,
+    "domain": "AI/ML",
+    "skills": ["Python", "TensorFlow", "PyTorch", "NLP", "Computer Vision", "Kubernetes", "MLOps"],
+    "soft_skills": ["leadership", "communication", "problem-solving"],
+    "career_progression": [
+      {"title": "ML Engineer", "years": 3, "company": "DataCorp"},
+      {"title": "Senior ML Engineer", "years": 3, "company": "TechFlow"},
+      {"title": "Lead ML Engineer", "years": 1, "company": "AI Labs"}
+    ],
+    "recent_certifications": ["AWS ML Specialty", "Google Cloud ML Engineer"],
+    "github_activity_score": 92,
+    "recent_role_change": true,
+    "education": "PhD Computer Science, Stanford"
+  },
+  {
+    "id": "c002",
+    "name": "Bob Martinez",
+    "email": "bob.martinez@example.com",
+    "current_title": "Full Stack Developer",
+    "experience_years": 5,
+    "domain": "Web Development",
+    "skills": ["JavaScript", "React", "Node.js", "Python", "Django", "PostgreSQL", "Docker"],
+    "soft_skills": ["teamwork", "adaptability", "time management"],
+    "career_progression": [
+      {"title": "Junior Developer", "years": 2, "company": "WebStart"},
+      {"title": "Full Stack Developer", "years": 3, "company": "Digital Solutions"}
+    ],
+    "recent_certifications": ["AWS Developer Associate"],
+    "github_activity_score": 65,
+    "recent_role_change": false,
+    "education": "BS Computer Science, MIT"
+  },
+  {
+    "id": "c003",
+    "name": "Clara Johnson",
+    "email": "clara.johnson@example.com",
+    "current_title": "Data Scientist",
+    "experience_years": 4,
+    "domain": "Data Science",
+    "skills": ["Python", "R", "SQL", "Machine Learning", "Statistical Analysis", "Tableau", "Spark"],
+    "soft_skills": ["analytical thinking", "curiosity", "presentation"],
+    "career_progression": [
+      {"title": "Data Analyst", "years": 2, "company": "FinMetrics"},
+      {"title": "Data Scientist", "years": 2, "company": "HealthData Inc"}
+    ],
+    "recent_certifications": ["TensorFlow Developer Certificate"],
+    "github_activity_score": 45,
+    "recent_role_change": false,
+    "education": "MS Statistics, UC Berkeley"
+  },
+  {
+    "id": "c004",
+    "name": "David Park",
+    "email": "david.park@example.com",
+    "current_title": "DevOps Engineer",
+    "experience_years": 6,
+    "domain": "Infrastructure",
+    "skills": ["AWS", "Terraform", "Docker", "Kubernetes", "CI/CD", "Linux", "Ansible", "Python"],
+    "soft_skills": ["automation mindset", "documentation", "collaboration"],
+    "career_progression": [
+      {"title": "Systems Administrator", "years": 3, "company": "NetServices"},
+      {"title": "DevOps Engineer", "years": 3, "company": "CloudScale"}
+    ],
+    "recent_certifications": ["AWS Solutions Architect", "CKA"],
+    "github_activity_score": 55,
+    "recent_role_change": true,
+    "education": "BS Computer Engineering, Georgia Tech"
+  },
+  {
+    "id": "c005",
+    "name": "Elena Rodriguez",
+    "email": "elena.rodriguez@example.com",
+    "current_title": "AI Research Scientist",
+    "experience_years": 8,
+    "domain": "AI/ML",
+    "skills": ["Deep Learning", "NLP", "Python", "C++", "Reinforcement Learning", "Transformers", "PyTorch", "JAX"],
+    "soft_skills": ["research", "mentoring", "critical thinking"],
+    "career_progression": [
+      {"title": "Research Assistant", "years": 4, "company": "University Lab"},
+      {"title": "AI Research Scientist", "years": 4, "company": "DeepMind"}
+    ],
+    "recent_certifications": ["Deep Learning Specialization", "NLP Advanced"],
+    "github_activity_score": 78,
+    "recent_role_change": false,
+    "education": "PhD Artificial Intelligence, Cambridge"
+  },
+  {
+    "id": "c006",
+    "name": "Frank Wilson",
+    "email": "frank.wilson@example.com",
+    "current_title": "Product Manager",
+    "experience_years": 9,
+    "domain": "Product",
+    "skills": ["Product Strategy", "User Research", "A/B Testing", "Analytics", "Agile", "SQL"],
+    "soft_skills": ["leadership", "stakeholder management", "empathy", "strategic thinking"],
+    "career_progression": [
+      {"title": "Associate PM", "years": 3, "company": "StartupA"},
+      {"title": "Product Manager", "years": 4, "company": "MidCorp"},
+      {"title": "Senior PM", "years": 2, "company": "BigTech"}
+    ],
+    "recent_certifications": ["CSPO", "Pragmatic Institute"],
+    "github_activity_score": 20,
+    "recent_role_change": true,
+    "education": "MBA, Harvard"
+  },
+  {
+    "id": "c007",
+    "name": "Grace Kim",
+    "email": "grace.kim@example.com",
+    "current_title": "Backend Engineer",
+    "experience_years": 3,
+    "domain": "Backend Development",
+    "skills": ["Python", "Go", "PostgreSQL", "Redis", "gRPC", "Microservices", "Kafka"],
+    "soft_skills": ["ownership", "code review", "mentorship"],
+    "career_progression": [
+      {"title": "Junior Backend Engineer", "years": 1, "company": "StartupB"},
+      {"title": "Backend Engineer", "years": 2, "company": "ScaleUp"}
+    ],
+    "recent_certifications": [],
+    "github_activity_score": 71,
+    "recent_role_change": false,
+    "education": "BS Computer Science, CMU"
+  },
+  {
+    "id": "c008",
+    "name": "Henry Nakamura",
+    "email": "henry.nakamura@example.com",
+    "current_title": "Cybersecurity Analyst",
+    "experience_years": 5,
+    "domain": "Security",
+    "skills": ["Network Security", "Penetration Testing", "Python", "SIEM", "Cloud Security", "Compliance"],
+    "soft_skills": ["attention to detail", "incident response", "risk assessment"],
+    "career_progression": [
+      {"title": "IT Security Analyst", "years": 2, "company": "SecureCorp"},
+      {"title": "Cybersecurity Analyst", "years": 3, "company": "BankSafe"}
+    ],
+    "recent_certifications": ["CISSP", "CEH"],
+    "github_activity_score": 30,
+    "recent_role_change": false,
+    "education": "BS Cybersecurity, Purdue"
+  },
+  {
+    "id": "c009",
+    "name": "Iris Thompson",
+    "email": "iris.thompson@example.com",
+    "current_title": "Frontend Engineer",
+    "experience_years": 4,
+    "domain": "Frontend Development",
+    "skills": ["JavaScript", "TypeScript", "React", "Vue.js", "CSS/SASS", "Webpack", "GraphQL", "Jest"],
+    "soft_skills": ["UI/UX sensibility", "creativity", "cross-team collaboration"],
+    "career_progression": [
+      {"title": "Junior Frontend Developer", "years": 2, "company": "WebAgency"},
+      {"title": "Frontend Engineer", "years": 2, "company": "ProductCo"}
+    ],
+    "recent_certifications": ["Google UX Design"],
+    "github_activity_score": 82,
+    "recent_role_change": true,
+    "education": "BS Human-Computer Interaction, Stanford"
+  },
+  {
+    "id": "c010",
+    "name": "James Okafor",
+    "email": "james.okafor@example.com",
+    "current_title": "Data Engineer",
+    "experience_years": 6,
+    "domain": "Data Engineering",
+    "skills": ["Python", "SQL", "Spark", "Airflow", "Snowflake", "dbt", "Kafka", "AWS"],
+    "soft_skills": ["data modeling", "pipeline optimization", "reliability"],
+    "career_progression": [
+      {"title": "Data Analyst", "years": 2, "company": "RetailMetrics"},
+      {"title": "Data Engineer", "years": 4, "company": "DataStream"}
+    ],
+    "recent_certifications": ["GCP Data Engineer", "AWS Data Analytics"],
+    "github_activity_score": 48,
+    "recent_role_change": false,
+    "education": "BS Information Systems, MIT"
+  },
+  {
+    "id": "c011",
+    "name": "Karen Liu",
+    "email": "karen.liu@example.com",
+    "current_title": "MLOps Engineer",
+    "experience_years": 5,
+    "domain": "AI/ML",
+    "skills": ["Python", "Kubernetes", "MLflow", "Docker", "CI/CD", "AWS SageMaker", "Terraform", "Feature Stores"],
+    "soft_skills": ["system design", "cross-functional", "incident management"],
+    "career_progression": [
+      {"title": "Data Engineer", "years": 2, "company": "DataWorks"},
+      {"title": "MLOps Engineer", "years": 3, "company": "AICloud"}
+    ],
+    "recent_certifications": ["AWS ML Specialty", "CKA"],
+    "github_activity_score": 60,
+    "recent_role_change": false,
+    "education": "MS Data Science, Columbia"
+  },
+  {
+    "id": "c012",
+    "name": "Leo Schmidt",
+    "email": "leo.schmidt@example.com",
+    "current_title": "Engineering Manager",
+    "experience_years": 11,
+    "domain": "Engineering Leadership",
+    "skills": ["Team Management", "System Architecture", "Python", "Agile", "Strategic Planning", "Budgeting"],
+    "soft_skills": ["leadership", "conflict resolution", "coaching", "vision"],
+    "career_progression": [
+      {"title": "Software Engineer", "years": 4, "company": "TechGiant"},
+      {"title": "Senior Engineer", "years": 3, "company": "TechGiant"},
+      {"title": "Engineering Manager", "years": 4, "company": "MidCorp"}
+    ],
+    "recent_certifications": ["PMP", "SAFe Agilist"],
+    "github_activity_score": 15,
+    "recent_role_change": true,
+    "education": "MS Computer Science, ETH Zurich"
+  },
+  {
+    "id": "c013",
+    "name": "Maria Santos",
+    "email": "maria.santos@example.com",
+    "current_title": "AI/ML Developer",
+    "experience_years": 3,
+    "domain": "AI/ML",
+    "skills": ["Python", "Machine Learning", "scikit-learn", "Pandas", "Flask", "SQL", "Docker"],
+    "soft_skills": ["learning agility", "collaboration", "problem-solving"],
+    "career_progression": [
+      {"title": "Junior Python Developer", "years": 1, "company": "CodeBase"},
+      {"title": "AI/ML Developer", "years": 2, "company": "SmartApps"}
+    ],
+    "recent_certifications": ["IBM AI Engineering"],
+    "github_activity_score": 68,
+    "recent_role_change": false,
+    "education": "BS Computer Science, UT Austin"
+  },
+  {
+    "id": "c014",
+    "name": "Nathan Cooper",
+    "email": "nathan.cooper@example.com",
+    "current_title": "Solutions Architect",
+    "experience_years": 10,
+    "domain": "Cloud Architecture",
+    "skills": ["AWS", "Azure", "GCP", "Microservices", "System Design", "Python", "Java", "Kubernetes"],
+    "soft_skills": ["client-facing", "communication", "technical sales", "negotiation"],
+    "career_progression": [
+      {"title": "Software Developer", "years": 4, "company": "SoftSolutions"},
+      {"title": "Senior Developer", "years": 3, "company": "EnterpriseX"},
+      {"title": "Solutions Architect", "years": 3, "company": "CloudVendors"}
+    ],
+    "recent_certifications": ["AWS Solutions Architect Pro", "GCP Architect", "Azure Architect"],
+    "github_activity_score": 35,
+    "recent_role_change": false,
+    "education": "BS Computer Science, Waterloo"
+  },
+  {
+    "id": "c015",
+    "name": "Olivia Brown",
+    "email": "olivia.brown@example.com",
+    "current_title": "UX Researcher",
+    "experience_years": 4,
+    "domain": "UX Design",
+    "skills": ["User Research", "Usability Testing", "Figma", "Data Analysis", "Survey Design", "SQL"],
+    "soft_skills": ["empathy", "communication", "storytelling", "bias awareness"],
+    "career_progression": [
+      {"title": "Junior UX Researcher", "years": 2, "company": "DesignLab"},
+      {"title": "UX Researcher", "years": 2, "company": "UserFirst"}
+    ],
+    "recent_certifications": ["NN/g UX Certification"],
+    "github_activity_score": 10,
+    "recent_role_change": true,
+    "education": "MS Human-Computer Interaction, UWashington"
+  },
+  {
+    "id": "c016",
+    "name": "Peter van Dijk",
+    "email": "peter.vandijk@example.com",
+    "current_title": "Site Reliability Engineer",
+    "experience_years": 7,
+    "domain": "Infrastructure",
+    "skills": ["Kubernetes", "Go", "Prometheus", "Linux", "Distributed Systems", "Python", "Incident Response"],
+    "soft_skills": ["incident management", "blameless culture", "automation", "on-call discipline"],
+    "career_progression": [
+      {"title": "Systems Engineer", "years": 3, "company": "HostPro"},
+      {"title": "SRE", "years": 4, "company": "ReliableCorp"}
+    ],
+    "recent_certifications": ["CKA", "CKAD", "Prometheus Certified"],
+    "github_activity_score": 74,
+    "recent_role_change": false,
+    "education": "BS Computer Engineering, TU Delft"
+  },
+  {
+    "id": "c017",
+    "name": "Quinn Zhang",
+    "email": "quinn.zhang@example.com",
+    "current_title": "Mobile Developer",
+    "experience_years": 5,
+    "domain": "Mobile Development",
+    "skills": ["Swift", "Kotlin", "React Native", "iOS", "Android", "Firebase", "REST APIs"],
+    "soft_skills": ["user focus", "performance optimization", "app store strategy"],
+    "career_progression": [
+      {"title": "Junior Mobile Developer", "years": 2, "company": "AppFactory"},
+      {"title": "Mobile Developer", "years": 3, "company": "MobileFirst"}
+    ],
+    "recent_certifications": ["Apple Certified iOS Developer"],
+    "github_activity_score": 41,
+    "recent_role_change": false,
+    "education": "BS Computer Science, UC San Diego"
+  },
+  {
+    "id": "c018",
+    "name": "Rachel Adams",
+    "email": "rachel.adams@example.com",
+    "current_title": "Technical Writer",
+    "experience_years": 6,
+    "domain": "Documentation",
+    "skills": ["Technical Writing", "API Documentation", "Markdown", "Git", "Information Architecture", "DITA"],
+    "soft_skills": ["clarity", "audience awareness", "collaboration", "research"],
+    "career_progression": [
+      {"title": "Junior Technical Writer", "years": 2, "company": "DocuSoft"},
+      {"title": "Technical Writer", "years": 4, "company": "TechDocs Inc"}
+    ],
+    "recent_certifications": ["STC Certified"],
+    "github_activity_score": 25,
+    "recent_role_change": false,
+    "education": "BA English, University of Chicago"
+  },
+  {
+    "id": "c019",
+    "name": "Samuel Tesfaye",
+    "email": "samuel.tesfaye@example.com",
+    "current_title": "Machine Learning Engineer",
+    "experience_years": 4,
+    "domain": "AI/ML",
+    "skills": ["Python", "PyTorch", "Scikit-learn", "MLflow", "Docker", "SQL", "FastAPI", "Feature Engineering"],
+    "soft_skills": ["experimentation", "documentation", "team collaboration"],
+    "career_progression": [
+      {"title": "Data Scientist", "years": 1, "company": "DataDriven"},
+      {"title": "Machine Learning Engineer", "years": 3, "company": "PredictCorp"}
+    ],
+    "recent_certifications": [],
+    "github_activity_score": 85,
+    "recent_role_change": true,
+    "education": "MS Machine Learning, Georgia Tech"
+  },
+  {
+    "id": "c020",
+    "name": "Tina Patel",
+    "email": "tina.patel@example.com",
+    "current_title": "Cloud Engineer",
+    "experience_years": 5,
+    "domain": "Cloud Infrastructure",
+    "skills": ["AWS", "Terraform", "Docker", "Kubernetes", "CI/CD", "Linux", "Python", "Networking"],
+    "soft_skills": ["reliability", "automation first", "knowledge sharing"],
+    "career_progression": [
+      {"title": "Junior Cloud Engineer", "years": 2, "company": "CloudStart"},
+      {"title": "Cloud Engineer", "years": 3, "company": "EnterpriseCloud"}
+    ],
+    "recent_certifications": ["AWS Solutions Architect", "HashiCorp Terraform Associate"],
+    "github_activity_score": 53,
+    "recent_role_change": false,
+    "education": "BS Computer Science, UIUC"
+  },
+  {
+    "id": "c021",
+    "name": "Uma Krishnan",
+    "email": "uma.krishnan@example.com",
+    "current_title": "Vice President of Engineering",
+    "experience_years": 15,
+    "domain": "Engineering Leadership",
+    "skills": ["Engineering Strategy", "Team Building", "Python", "Java", "Cloud Architecture", "Agile Transformation"],
+    "soft_skills": ["executive presence", "strategic thinking", "mentorship", "cross-org influence"],
+    "career_progression": [
+      {"title": "Software Engineer", "years": 5, "company": "Oracle"},
+      {"title": "Engineering Manager", "years": 5, "company": "Amazon"},
+      {"title": "Director of Engineering", "years": 3, "company": "StartupX"},
+      {"title": "VP Engineering", "years": 2, "company": "ScaleUpCo"}
+    ],
+    "recent_certifications": ["Executive Leadership Certificate"],
+    "github_activity_score": 12,
+    "recent_role_change": true,
+    "education": "MBA + MS CS, Stanford"
+  },
+  {
+    "id": "c022",
+    "name": "Victor Hugo",
+    "email": "victor.hugo@example.com",
+    "current_title": "AI Product Manager",
+    "experience_years": 7,
+    "domain": "AI Product",
+    "skills": ["Product Management", "AI/ML Strategy", "Python", "SQL", "User Research", "A/B Testing", "Roadmapping"],
+    "soft_skills": ["cross-functional", "customer empathy", "data-driven", "storytelling"],
+    "career_progression": [
+      {"title": "Product Analyst", "years": 2, "company": "DataProducts"},
+      {"title": "AI Product Manager", "years": 5, "company": "AICorp"}
+    ],
+    "recent_certifications": ["AI Product Manager Certification"],
+    "github_activity_score": 22,
+    "recent_role_change": false,
+    "education": "MBA + BS CS, INSEAD/Waterloo"
+  },
+  {
+    "id": "c023",
+    "name": "Wendy Chang",
+    "email": "wendy.chang@example.com",
+    "current_title": "NLP Engineer",
+    "experience_years": 4,
+    "domain": "AI/ML",
+    "skills": ["Python", "NLP", "Transformers", "BERT", "spaCy", "PyTorch", "RAG", "LangChain"],
+    "soft_skills": ["research orientation", "writing", "presentation"],
+    "career_progression": [
+      {"title": "Data Scientist", "years": 1, "company": "TextAnalytics"},
+      {"title": "NLP Engineer", "years": 3, "company": "LanguageAI"}
+    ],
+    "recent_certifications": ["TensorFlow Developer Certificate"],
+    "github_activity_score": 76,
+    "recent_role_change": true,
+    "education": "MS Computational Linguistics, Stanford"
+  },
+  {
+    "id": "c024",
+    "name": "Xander Brooks",
+    "email": "xander.brooks@example.com",
+    "current_title": "Software Development Engineer in Test",
+    "experience_years": 6,
+    "domain": "QA/Testing",
+    "skills": ["Python", "Selenium", "Cypress", "Test Automation", "CI/CD", "API Testing", "Performance Testing"],
+    "soft_skills": ["quality mindset", "debugging", "collaboration", "process improvement"],
+    "career_progression": [
+      {"title": "Manual QA", "years": 2, "company": "TestCo"},
+      {"title": "SDET", "years": 4, "company": "QualityFirst"}
+    ],
+    "recent_certifications": ["ISTQB Advanced"],
+    "github_activity_score": 38,
+    "recent_role_change": false,
+    "education": "BS Software Engineering, USC"
+  },
+  {
+    "id": "c025",
+    "name": "Yara Hassan",
+    "email": "yara.hassan@example.com",
+    "current_title": "Computer Vision Engineer",
+    "experience_years": 5,
+    "domain": "AI/ML",
+    "skills": ["Python", "PyTorch", "OpenCV", "Object Detection", "Image Segmentation", "ONNX", "Docker", "C++"],
+    "soft_skills": ["visual reasoning", "experimentation", "edge deployment"],
+    "career_progression": [
+      {"title": "ML Engineer", "years": 2, "company": "VisionStart"},
+      {"title": "Computer Vision Engineer", "years": 3, "company": "VisualAI"}
+    ],
+    "recent_certifications": ["NVIDIA DLI Certifications"],
+    "github_activity_score": 69,
+    "recent_role_change": false,
+    "education": "MS Computer Vision, ETH Zurich"
+  }
+]

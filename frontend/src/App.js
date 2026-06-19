@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import TopRankingsTab from './components/TopRankingsTab';
 import UploadRankTab from './components/UploadRankTab';
 import ScoreBreakdownTab from './components/ScoreBreakdownTab';
+import Toast from './components/Toast';
 import './App.css';
 
 function AppInner() {
@@ -15,8 +16,18 @@ function AppInner() {
   const [isOffline, setIsOffline] = useState(false);
   const [checkingHealth, setCheckingHealth] = useState(true);
   const [cachedCandidates, setCachedCandidates] = useState([]);
+  const [offlineCandidates, setOfflineCandidates] = useState([]);
   const [fadeKey, setFadeKey] = useState(0);
+  const [toasts, setToasts] = useState([]);
   const healthChecked = useRef(false);
+
+  const showToast = useCallback((message, type = 'success') => {
+    const id = Date.now() + Math.random();
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 3500);
+  }, []);
 
   useEffect(() => {
     if (healthChecked.current) return;
@@ -40,11 +51,21 @@ function AppInner() {
       .then((data) => {
         if (Array.isArray(data)) {
           setCachedCandidates(data);
+          setOfflineCandidates(data);
         }
       })
       .catch(() => {
         setIsOffline(true);
         setCheckingHealth(false);
+        fetch('/candidates.json')
+          .then(r => r.json())
+          .then(data => {
+            if (Array.isArray(data)) {
+              setOfflineCandidates(data);
+              setCachedCandidates(data);
+            }
+          })
+          .catch(() => {});
       });
 
     return () => {
@@ -54,6 +75,18 @@ function AppInner() {
   }, []);
 
   const handleFindCandidates = async (jdText) => {
+    if (isOffline) {
+      const { rankCandidates } = await import('./utils/offlineScorer');
+      const results = rankCandidates(offlineCandidates, jdText);
+      const enriched = results.map(c => ({
+        ...c,
+        all_skills: (offlineCandidates.find(cc => cc.id === c.candidate_id) || {}).skills || c.matched_skills || [],
+      }));
+      setCandidates(enriched);
+      setActiveTab('rankings');
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -82,11 +115,16 @@ function AppInner() {
     setFadeKey((k) => k + 1);
   };
 
+  const clearResults = () => {
+    setCandidates([]);
+    setError(null);
+  };
+
   return (
     <div className="app">
       {isOffline && (
         <div className="offline-banner">
-          <span>Running in offline mode — using local scoring engine</span>
+          <span>Running offline — results use local keyword scoring (less accurate than semantic AI)</span>
         </div>
       )}
       <Navbar
@@ -106,12 +144,16 @@ function AppInner() {
               onFindCandidates={handleFindCandidates}
               jdText={jdText}
               setJdText={setJdText}
+              offlineCandidates={offlineCandidates}
+              clearResults={clearResults}
+              showToast={showToast}
             />
           )}
           {activeTab === 'upload' && (
             <UploadRankTab
               isOffline={isOffline}
               backendCandidates={cachedCandidates}
+              showToast={showToast}
             />
           )}
           {activeTab === 'breakdown' && (
@@ -119,6 +161,7 @@ function AppInner() {
           )}
         </div>
       </main>
+      <Toast toasts={toasts} />
     </div>
   );
 }

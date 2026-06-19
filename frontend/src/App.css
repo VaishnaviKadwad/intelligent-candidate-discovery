@@ -496,6 +496,20 @@ body {
   gap: 0.5rem;
 }
 
+.avatar-initial {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gradient);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .score-bar-label {
   font-size: 0.78rem;
   color: var(--text-secondary);
@@ -583,6 +597,49 @@ body {
   border-radius: 12px;
   padding: 1.5rem;
   transition: background 0.3s, border-color 0.3s;
+}
+
+.upload-jd-input {
+  margin-bottom: 1rem;
+}
+
+.upload-jd-input label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.field-hint {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.upload-jd-input textarea {
+  width: 100%;
+  min-height: 80px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 0.7rem;
+  font-size: 0.88rem;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.upload-jd-input textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.jd-warning {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--warning);
 }
 
 .upload-section h2,
@@ -782,6 +839,51 @@ body {
 .radar-score-value {
   font-weight: 600;
   color: var(--accent);
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 4px 15px var(--shadow);
+  animation: toastSlideIn 0.3s ease-out;
+  pointer-events: auto;
+  max-width: 380px;
+}
+
+.toast-success {
+  background: color-mix(in srgb, var(--success) 20%, transparent);
+  color: var(--success);
+  border: 1px solid color-mix(in srgb, var(--success) 40%, transparent);
+}
+
+.toast-error {
+  background: color-mix(in srgb, var(--danger) 20%, transparent);
+  color: var(--danger);
+  border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+}
+
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 /* ============================================================
