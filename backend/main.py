@@ -95,14 +95,14 @@ async def rank_candidates(job_input: JobDescriptionInput, top_n: int = 10):
         candidates=ranked,
     )
 
-if os.path.exists("frontend/dist"):
-    app.mount("/", StaticFiles(directory="frontend/dist"), name="static")
-    """@app.get("/")
-    async def read_index():
-        return FileResponse("frontend/dist/index.html")
+# ------------------------------------------------------------------
+# Mount Frontend Production Build
+# ------------------------------------------------------------------
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend", "dist")
 
-    app.mount("/", StaticFiles(directory="frontend/dist"), name="static")"""
-
+if os.path.exists(FRONTEND_DIR):
+    app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="static")
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)
