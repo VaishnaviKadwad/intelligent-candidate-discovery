@@ -8,8 +8,8 @@ RUN npm run build
 FROM python:3.9
 WORKDIR /app
 
-# Set python path environment variable so dependencies import properly
-ENV PYTHONPATH=/app
+# Include both /app and /app/backend so internal imports find your files perfectly
+ENV PYTHONPATH=/app:/app/backend
 
 COPY backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
@@ -19,5 +19,4 @@ COPY --from=frontend-build /app/frontend/build ./frontend/dist
 
 EXPOSE 7860
 
-# We run from /app context using the module reference
 CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "7860"]
