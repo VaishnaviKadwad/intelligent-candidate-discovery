@@ -12,6 +12,8 @@ pinned: false
 An AI-powered recruiter that semantically ranks candidates against a job description using multi-factor scoring.
 
 ---
+## Sandbox (Live Demo)
+👉 **Click here to run the live application:** [https://huggingface.co/spaces/VaishnaviKadwad/intelligent-candidate-discovery](https://huggingface.co/spaces/VaishnaviKadwad/intelligent-candidate-discovery)
 
 ## Architecture
 
