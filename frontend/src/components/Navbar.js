@@ -9,18 +9,12 @@ export default function Navbar({ activeTab, setActiveTab, isOffline, checkingHea
     { id: 'rankings', label: 'Top Rankings' },
     { id: 'upload', label: 'Upload & Rank' },
     { id: 'breakdown', label: 'Score Breakdown' },
+    { id: 'howitworks', label: 'How It Works' },
   ];
 
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        <div className="navbar-brand">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
-          </svg>
-          <span className="navbar-title">Candidate Discovery</span>
-        </div>
-
         <div className="navbar-tabs">
           {tabs.map((tab) => (
             <button

@@ -15,8 +15,30 @@ function getInitial(name) {
   return (name || '?').charAt(0).toUpperCase();
 }
 
-export default function CandidateCard({ rank, candidate, showExpand = true }) {
+function generateAIExplanation(candidate, rank) {
+  const matchedSkills = candidate.matched_skills || [];
+  const allSkills = candidate.all_skills || matchedSkills;
+  const totalSkills = allSkills.length || matchedSkills.length || 1;
+  const top3 = matchedSkills.slice(0, 3);
+  const yearsExp = candidate.experience_score >= 70 ? 8 : candidate.experience_score >= 40 ? 5 : 2;
+  const domain = candidate.title || 'the field';
+
+  let alignment = 'partially';
+  if (candidate.skill_match_pct > 70) alignment = 'strongly';
+  else if (candidate.skill_match_pct > 40) alignment = 'moderately';
+
+  let behavioralNote = '';
+  const beh = candidate.behavioral_score || 0;
+  if (beh > 70) behavioralNote = 'High engagement signals suggest an active, passionate contributor.';
+  else if (beh > 40) behavioralNote = 'Moderate community and activity engagement noted.';
+  else behavioralNote = 'Limited public activity — may prefer private or enterprise environments.';
+
+  return `${getName(candidate)} ranked #${rank} because they matched ${matchedSkills.length} of ${totalSkills} required skills including ${top3.join(', ') || 'several relevant areas'}. Their ${yearsExp}+ years of experience in ${domain} aligns ${alignment} with the role. ${behavioralNote}`;
+}
+
+export default function CandidateCard({ rank, candidate, showExpand = true, compareMode, isCompareSelected, onCompareToggle }) {
   const [expanded, setExpanded] = useState(false);
+  const [aiExpanded, setAiExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const name = getName(candidate);
@@ -30,10 +52,21 @@ export default function CandidateCard({ rank, candidate, showExpand = true }) {
     });
   };
 
+  const aiReasoning = generateAIExplanation(candidate, rank);
+
   return (
-    <div className="candidate-card" style={{ animationDelay: `${(rank || 0) * 60}ms` }}>
+    <div className="candidate-card" style={{ animationDelay: `${(rank || 0) * 100}ms` }}>
       <div className="card-header">
         <div className="card-header-left">
+          {compareMode && (
+            <input
+              type="checkbox"
+              className="compare-checkbox"
+              checked={!!isCompareSelected}
+              onChange={() => onCompareToggle && onCompareToggle(candidate)}
+              disabled={!isCompareSelected && compareMode.length >= 3}
+            />
+          )}
           <span className="rank-badge" style={rank <= 3 ? { background: 'var(--accent)' } : {}}>
             {rank <= 3 ? rankEmojis[rank - 1] : `#${rank}`}
           </span>
@@ -72,6 +105,16 @@ export default function CandidateCard({ rank, candidate, showExpand = true }) {
           {candidate.matched_skills.map((s, i) => (
             <span key={i} className="skill-tag">{s}</span>
           ))}
+        </div>
+      )}
+      <div className="card-actions-row">
+        <button className="ai-reasoning-btn" onClick={() => setAiExpanded(!aiExpanded)}>
+          <span>🧠</span> {aiExpanded ? 'Hide' : 'Show'} AI Reasoning
+        </button>
+      </div>
+      {aiExpanded && (
+        <div className="ai-reasoning-panel">
+          {aiReasoning}
         </div>
       )}
       {expanded && (

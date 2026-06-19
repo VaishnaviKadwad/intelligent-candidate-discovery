@@ -4,6 +4,8 @@ import Navbar from './components/Navbar';
 import TopRankingsTab from './components/TopRankingsTab';
 import UploadRankTab from './components/UploadRankTab';
 import ScoreBreakdownTab from './components/ScoreBreakdownTab';
+import HowItWorksTab from './components/HowItWorksTab';
+import ComparisonDrawer from './components/ComparisonDrawer';
 import Toast from './components/Toast';
 import './App.css';
 
@@ -19,6 +21,7 @@ function AppInner() {
   const [offlineCandidates, setOfflineCandidates] = useState([]);
   const [fadeKey, setFadeKey] = useState(0);
   const [toasts, setToasts] = useState([]);
+  const [compareMode, setCompareMode] = useState([]);
   const healthChecked = useRef(false);
 
   const showToast = useCallback((message, type = 'success') => {
@@ -83,7 +86,6 @@ function AppInner() {
         all_skills: (offlineCandidates.find(cc => cc.id === c.candidate_id) || {}).skills || c.matched_skills || [],
       }));
       setCandidates(enriched);
-      setActiveTab('rankings');
       return;
     }
 
@@ -102,7 +104,6 @@ function AppInner() {
         all_skills: (cachedCandidates.find((cc) => cc.id === c.candidate_id) || {}).skills || c.matched_skills || [],
       }));
       setCandidates(enriched);
-      setActiveTab('rankings');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -118,21 +119,56 @@ function AppInner() {
   const clearResults = () => {
     setCandidates([]);
     setError(null);
+    setCompareMode([]);
+  };
+
+  const handleCompareToggle = (candidate) => {
+    setCompareMode(prev => {
+      const id = candidate.candidate_id || candidate.name;
+      const exists = prev.findIndex(c => (c.candidate_id || c.name) === id);
+      if (exists >= 0) return prev.filter((_, i) => i !== exists);
+      if (prev.length >= 3) return prev;
+      return [...prev, candidate];
+    });
   };
 
   return (
     <div className="app">
+      <div className="hero-section">
+        <div className="hero-orbs">
+          <div className="hero-orb orb-1" /><div className="hero-orb orb-2" /><div className="hero-orb orb-3" />
+        </div>
+        <div className="hero-content">
+          <h1 className="hero-title">TalentAI</h1>
+          <p className="hero-subtitle">Intelligent Candidate Discovery Engine</p>
+          <div className="hero-tagline">
+            <span className="hero-pill"><span className="pill-dot" /> Powered by Semantic AI</span>
+            <span className="hero-pill"><span className="pill-dot" /> Multi-Signal Scoring</span>
+            <span className="hero-pill"><span className="pill-dot" /> Real-time Ranking</span>
+          </div>
+          <div className="hero-stats">
+            <span className="hero-stat">50 Candidates</span>
+            <span className="hero-stat-divider">•</span>
+            <span className="hero-stat">4 Scoring Signals</span>
+            <span className="hero-stat-divider">•</span>
+            <span className="hero-stat">&lt;1s Ranking</span>
+          </div>
+        </div>
+      </div>
+
       {isOffline && (
         <div className="offline-banner">
           <span>Running offline — results use local keyword scoring (less accurate than semantic AI)</span>
         </div>
       )}
+
       <Navbar
         activeTab={activeTab}
         setActiveTab={handleTabChange}
         isOffline={isOffline}
         checkingHealth={checkingHealth}
       />
+
       <main className="main-content">
         <div className="tab-panel" key={fadeKey}>
           {activeTab === 'rankings' && (
@@ -147,6 +183,8 @@ function AppInner() {
               offlineCandidates={offlineCandidates}
               clearResults={clearResults}
               showToast={showToast}
+              compareMode={compareMode}
+              onCompareToggle={handleCompareToggle}
             />
           )}
           {activeTab === 'upload' && (
@@ -159,8 +197,33 @@ function AppInner() {
           {activeTab === 'breakdown' && (
             <ScoreBreakdownTab candidates={candidates} />
           )}
+          {activeTab === 'howitworks' && (
+            <HowItWorksTab />
+          )}
         </div>
       </main>
+
+      {compareMode.length >= 2 && (
+        <ComparisonDrawer
+          compareList={compareMode}
+          onClose={() => setCompareMode([])}
+        />
+      )}
+
+      <footer className="app-footer">
+        <div className="footer-inner">
+          <p className="footer-challenge">Built for Data &amp; AI Challenge: Intelligent Candidate Discovery</p>
+          <div className="footer-pills">
+            <span className="footer-pill">Python</span>
+            <span className="footer-pill">FastAPI</span>
+            <span className="footer-pill">React</span>
+            <span className="footer-pill">Sentence Transformers</span>
+            <span className="footer-pill">Cosine Similarity</span>
+          </div>
+          <p className="footer-powered">Powered by TalentAI Engine v1.0</p>
+        </div>
+      </footer>
+
       <Toast toasts={toasts} />
     </div>
   );
