@@ -77,7 +77,7 @@ export default function CandidateCard({ rank, candidate, showExpand = true, comp
           </div>
         </div>
         <div className="card-header-right">
-          <div className="final-score">{candidate.final_score}%</div>
+          <div className="final-score">{isNaN(candidate.final_score) ? 0 : candidate.final_score}%</div>
           {showExpand && (
             <button className="icon-btn" onClick={() => setExpanded(!expanded)} title={expanded ? 'Collapse' : 'Expand details'}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2" style={{ transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
@@ -96,7 +96,7 @@ export default function CandidateCard({ rank, candidate, showExpand = true, comp
       </div>
       <div className="reasoning">{candidate.reasoning}</div>
       <div className="score-bars">
-        <ScoreBar label="Skill Match" value={candidate.skill_match_pct} color="var(--accent)" />
+        <ScoreBar label="Skill Match" value={candidate.skill_match_pct ?? candidate.skill_match ?? 0} color="var(--accent)" />
         <ScoreBar label="Experience" value={candidate.experience_score} color="#22c55e" />
         <ScoreBar label="Behavioral" value={candidate.behavioral_score} color="#f59e0b" />
       </div>
