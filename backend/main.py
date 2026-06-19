@@ -99,7 +99,7 @@ async def rank_candidates(job_input: JobDescriptionInput, top_n: int = 10):
 # Mount Frontend Production Build
 # ------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FRONTEND_DIR = os.path.join(BASE_DIR, "frontend", "dist")
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend", "build")
 
 if os.path.exists(FRONTEND_DIR):
     app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="static")
