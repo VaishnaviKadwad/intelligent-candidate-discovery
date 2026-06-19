@@ -1,179 +1,202 @@
-// offlineScorer.js — Robust offline candidate ranking engine
+// offlineScorer.js — Built for the exact candidate JSON structure
 
-// Normalize any candidate object to a standard shape
+// ─── NORMALIZE: flatten nested candidate object ───────────────────────────────
 function normalizeCandidate(c, index) {
-  const skills = parseSkills(
-    c.skills || c.Skills || c.skill_set || c.technologies ||
-    c.tech_stack || c.Skillset || c.skillset || ""
-  );
+  const profile = c.profile || {};
+  const signals = c.redrob_signals || {};
 
-  const experience = parseExperience(
-    c.years_experience ?? c.experience ?? c.exp ??
-    c.Years_Experience ?? c.yrs_exp ?? c.Experience ?? 0
-  );
+  // Name: nested inside profile.anonymized_name
+  const name = profile.anonymized_name || c.name || `Candidate ${index + 1}`;
 
-  const behavioral = parseFloat(
-    c.github_activity_score ?? c.activity_score ??
-    c.behavioral_score ?? c.github_score ?? 50
-  );
+  // Title: nested inside profile.current_title
+  const title = profile.current_title || profile.headline || c.title || "No title";
+
+  // Experience: nested inside profile.years_of_experience
+  const experience = parseFloat(profile.years_of_experience ?? c.years_of_experience ?? 0) || 0;
+
+  // Skills: array of objects [{name, proficiency, endorsements}] → extract .name strings
+  const rawSkills = c.skills || [];
+  const skills = rawSkills.map(s =>
+    typeof s === "object" ? (s.name || "").toLowerCase().trim() : String(s).toLowerCase().trim()
+  ).filter(Boolean);
+
+  // Behavioral: nested inside redrob_signals.github_activity_score (can be -1 = no data)
+  const rawBehavioral = signals.github_activity_score ?? c.github_activity_score ?? 50;
+  const behavioral = rawBehavioral < 0 ? 30 : Math.min(parseFloat(rawBehavioral) || 30, 100);
+
+  // Bonus signals from redrob_signals
+  const profileCompleteness = parseFloat(signals.profile_completeness_score ?? 50);
+  const openToWork = signals.open_to_work_flag ? 10 : 0;
+  const connectionScore = Math.min((signals.connection_count || 0) / 10, 10);
+
+  // Summary text for keyword matching (extra signal)
+  const summary = profile.summary || "";
+  const headline = profile.headline || "";
 
   return {
-    id: c.id || c.ID || index + 1,
-    name: c.name || c.Name || c.full_name || c.candidate_name || `Candidate ${index + 1}`,
-    title: c.current_title || c.title || c.job_title || c.designation || c.Title || "No title",
-    skills,
+    id: c.candidate_id || index + 1,
+    name,
+    title,
+    company: profile.current_company || "",
+    location: profile.location || "",
     experience,
-    behavioral: isNaN(behavioral) ? 50 : behavioral,
+    skills,
+    behavioral,
+    profileCompleteness,
+    openToWork,
+    connectionScore,
+    summary,
+    headline,
     raw: c
   };
 }
 
-function parseSkills(val) {
-  if (!val) return [];
-  if (Array.isArray(val)) return val.map(s => String(s).trim().toLowerCase()).filter(Boolean);
-  if (typeof val === "string") {
-    // handles: "Python, FastAPI, ML" or "Python|FastAPI" or "Python;FastAPI"
-    return val.split(/[,|;\/\n]+/).map(s => s.trim().toLowerCase()).filter(Boolean);
-  }
-  return [];
-}
-
-function parseExperience(val) {
-  if (val === null || val === undefined || val === "") return 0;
-  const num = parseFloat(String(val).replace(/[^0-9.]/g, ""));
-  return isNaN(num) ? 0 : num;
-}
-
+// ─── EXPERIENCE SCORING ───────────────────────────────────────────────────────
 function experienceScore(years) {
   if (years >= 12) return 100;
-  if (years >= 8)  return 75;
-  if (years >= 5)  return 50;
-  if (years >= 2)  return 30;
-  if (years >= 1)  return 15;
+  if (years >= 8)  return 80;
+  if (years >= 5)  return 60;
+  if (years >= 3)  return 40;
+  if (years >= 1)  return 20;
   return 5;
 }
 
+// ─── JD KEYWORD EXTRACTION ───────────────────────────────────────────────────
 function extractJDKeywords(jd) {
-  if (!jd || jd.trim() === "") return [];
+  if (!jd || !jd.trim()) return [];
   const stopWords = new Set([
-    "the","and","for","with","that","this","have","from","they",
-    "will","been","more","when","your","what","which","their",
-    "about","would","there","could","other","into","some","than",
-    "then","these","those","were","also","must","should","can",
-    "required","experience","looking","candidate","role","team",
-    "work","using","use","etc","good","strong","well","ability"
+    "the","and","for","with","that","this","have","from","they","will",
+    "been","more","when","your","what","which","their","about","would",
+    "there","could","other","into","some","than","then","these","those",
+    "were","also","must","should","can","required","experience","looking",
+    "candidate","role","team","work","using","use","etc","good","strong",
+    "well","ability","our","you","who","are","has","its","not","but","all"
   ]);
   return [...new Set(
     jd.toLowerCase()
-      .replace(/[^a-z0-9\s\+\#\.]/g, " ")
+      .replace(/[^a-z0-9\s\+\#\.\/]/g, " ")
       .split(/\s+/)
       .filter(w => w.length > 2 && !stopWords.has(w))
   )];
 }
 
-function skillMatchScore(candidateSkills, jdKeywords) {
-  if (!jdKeywords.length || !candidateSkills.length) return { score: 0, matched: [] };
+// ─── SKILL MATCHING ───────────────────────────────────────────────────────────
+function skillMatchScore(candidate, jdKeywords) {
+  if (!jdKeywords.length) return { score: 0, matched: [] };
 
-  const matched = candidateSkills.filter(skill =>
+  const { skills, summary, headline } = candidate;
+
+  // Match skills array against JD keywords
+  const matchedSkills = skills.filter(skill =>
     jdKeywords.some(kw =>
       skill.includes(kw) || kw.includes(skill) ||
-      levenshteinClose(skill, kw)
+      (skill.length > 3 && kw.length > 3 && (
+        skill.replace(/[\s\-_]/g, "").includes(kw.replace(/[\s\-_]/g, "")) ||
+        kw.replace(/[\s\-_]/g, "").includes(skill.replace(/[\s\-_]/g, ""))
+      ))
     )
   );
 
-  const score = Math.round((matched.length / Math.max(candidateSkills.length, jdKeywords.length * 0.3)) * 100);
-  return { score: Math.min(score, 100), matched };
+  // Also check summary/headline for keyword presence (boosts score)
+  const textMatches = jdKeywords.filter(kw =>
+    summary.toLowerCase().includes(kw) || headline.toLowerCase().includes(kw)
+  ).length;
+
+  const skillScore = skills.length > 0
+    ? (matchedSkills.length / skills.length) * 100
+    : 0;
+
+  // Bonus: up to 20 extra points for keyword presence in summary
+  const textBonus = Math.min((textMatches / Math.max(jdKeywords.length, 1)) * 20, 20);
+
+  return {
+    score: Math.min(Math.round(skillScore + textBonus), 100),
+    matched: matchedSkills.map(s => s.charAt(0).toUpperCase() + s.slice(1)) // capitalize
+  };
 }
 
-// Simple fuzzy match for short strings (e.g. "js" vs "javascript")
-function levenshteinClose(a, b) {
-  if (a.length < 2 || b.length < 2) return false;
-  if (a.length > 12 || b.length > 12) return false;
-  if (Math.abs(a.length - b.length) > 3) return false;
-  let common = 0;
-  for (const ch of a) if (b.includes(ch)) common++;
-  return common / Math.max(a.length, b.length) > 0.7;
+// ─── AI REASONING GENERATOR ──────────────────────────────────────────────────
+function generateReasoning(c, rank, skillResult, expScore, behavScore) {
+  const top3 = skillResult.matched.slice(0, 3).join(", ") || "general domain knowledge";
+  const expLabel = c.experience >= 8 ? "strongly" : c.experience >= 4 ? "moderately" : "partially";
+  const behavNote = c.behavioral > 70
+    ? "Active GitHub presence signals a passionate, hands-on engineer."
+    : c.behavioral > 40
+    ? "Moderate community engagement noted."
+    : "Limited public activity — may prefer enterprise/private environments.";
+  const openNote = c.openToWork > 0 ? " Currently open to work." : "";
+
+  return `${c.name} ranked #${rank} with ${skillResult.matched.length} skill matches` +
+    (top3 ? ` (${top3})` : "") +
+    `. ${c.experience} years of experience aligns ${expLabel} with this role.` +
+    ` ${behavNote}${openNote}`;
 }
 
-function generateReasoning(candidate, rank, skillResult, expScore, behavScore) {
-  const top3 = skillResult.matched.slice(0, 3).join(", ") || "general skills";
-  const expLabel = candidate.experience >= 8 ? "strongly" : candidate.experience >= 4 ? "moderately" : "partially";
-  const behavNote = candidate.behavioral > 70
-    ? "High activity signals an active, passionate engineer."
-    : candidate.behavioral > 40
-    ? "Moderate engagement noted in behavioral signals."
-    : "Limited public activity — may prefer enterprise environments.";
-
-  return `${candidate.name} ranked #${rank} because they matched ${skillResult.matched.length} required skills` +
-    (top3 ? ` including ${top3}` : "") +
-    `. Their ${candidate.experience} years of experience aligns ${expLabel} with the role. ${behavNote}`;
-}
-
-// Main export — rank candidates against a JD
+// ─── MAIN EXPORT: rankCandidates ─────────────────────────────────────────────
 export function rankCandidates(rawCandidates, jobDescription = "") {
   const jdKeywords = extractJDKeywords(jobDescription);
   const hasJD = jdKeywords.length > 0;
 
   const scored = rawCandidates.map((raw, i) => {
     const c = normalizeCandidate(raw, i);
-    const skillResult = skillMatchScore(c.skills, jdKeywords);
+    const skillResult = skillMatchScore(c, jdKeywords);
     const expScore = experienceScore(c.experience);
-    const behavScore = Math.min(c.behavioral, 100);
+    const behavScore = c.behavioral;
 
-    // Weights: skill 50%, experience 30%, behavioral 20%
-    // If no JD provided, redistribute: experience 60%, behavioral 40%
+    // Weighted scoring
+    // With JD:    skill 50% + experience 30% + behavioral 20%
+    // Without JD: experience 50% + behavioral 30% + profile completeness 20%
     const finalScore = hasJD
       ? Math.round(skillResult.score * 0.5 + expScore * 0.3 + behavScore * 0.2)
-      : Math.round(expScore * 0.6 + behavScore * 0.4);
+      : Math.round(expScore * 0.5 + behavScore * 0.3 + c.profileCompleteness * 0.2);
 
     return {
       ...c,
       skill_match: skillResult.score,
       experience_score: expScore,
-      behavioral_score: behavScore,
+      behavioral_score: Math.round(behavScore),
       final_score: finalScore,
       matched_skills: skillResult.matched,
-      reasoning: "",  // filled after sorting
       _skillResult: skillResult,
-      _expScore: expScore,
-      _behavScore: behavScore
     };
   });
 
-  // Sort descending
+  // Sort descending by final score
   scored.sort((a, b) => b.final_score - a.final_score);
 
   // Add rank + reasoning after sort
   return scored.map((c, i) => ({
     ...c,
     rank: i + 1,
-    reasoning: generateReasoning(c, i + 1, c._skillResult, c._expScore, c._behavScore)
+    reasoning: generateReasoning(c, i + 1, c._skillResult, c.experience_score, c.behavioral_score)
   }));
 }
 
-// Parse uploaded file content into candidate array
+// ─── FILE PARSER ─────────────────────────────────────────────────────────────
 export async function parseUploadedFile(file) {
   const ext = file.name.split(".").pop().toLowerCase();
-  const text = await file.text();
 
   if (ext === "json") {
+    const text = await file.text();
     const data = JSON.parse(text);
+    // Handle both array and {candidates: [...]} shapes
     return Array.isArray(data) ? data : data.candidates || data.data || Object.values(data);
   }
 
   if (ext === "csv") {
+    const text = await file.text();
     const { default: Papa } = await import("papaparse");
     const result = Papa.parse(text, { header: true, skipEmptyLines: true });
     return result.data;
   }
 
   if (ext === "xlsx" || ext === "xls") {
+    const arrayBuffer = await file.arrayBuffer();
     const XLSX = await import("xlsx");
-    const wb = XLSX.read(text, { type: "binary" });
+    const wb = XLSX.read(arrayBuffer, { type: "array" });
     const ws = wb.Sheets[wb.SheetNames[0]];
     return XLSX.utils.sheet_to_json(ws);
   }
 
-  // .txt or .pdf text — treat as JD, not candidates
   return [];
 }
