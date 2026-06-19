@@ -102,7 +102,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FRONTEND_DIR = os.path.join(BASE_DIR, "frontend", "build")
 
 if os.path.exists(FRONTEND_DIR):
+    # If the React production build exists, serve the user interface layout
     app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="static")
+else:
+    # Fallback API root if the build folder isn't found yet
+    @app.get("/")
+    async def root():
+        return {"message": "Intelligent Candidate Discovery API is running!", "docs": "/docs"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=7860)
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)
