@@ -96,11 +96,12 @@ async def rank_candidates(job_input: JobDescriptionInput, top_n: int = 10):
     )
 
 if os.path.exists("frontend/dist"):
-    @app.get("/")
+    app.mount("/", StaticFiles(directory="frontend/dist"), name="static")
+    """@app.get("/")
     async def read_index():
         return FileResponse("frontend/dist/index.html")
 
-    app.mount("/", StaticFiles(directory="frontend/dist"), name="static")
+    app.mount("/", StaticFiles(directory="frontend/dist"), name="static")"""
 
 if __name__ == "__main__":
     import uvicorn
